@@ -1,0 +1,41 @@
+name: Match Schedule Bot
+
+on:
+  schedule:
+    # Jadwal untuk menjalankan setiap hari pukul 00:00 di zona waktu Jakarta/Bandung (UTC+7)
+    # Cron string: MINUTE HOUR DAY_OF_MONTH MONTH DAY_OF_WEEK
+    # 0 17 * * * adalah 17:00 UTC, yang sama dengan 00:00 UTC+7 (Jakarta/Bandung)
+    - cron: '0 17 * * *'
+  workflow_dispatch:
+    # Mengizinkan menjalankan workflow secara manual dari GitHub UI
+
+jobs:
+  run-bot:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.1' # Sesuaikan dengan versi Python yang kamu gunakan
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+
+    - name: Set timezone to Asia/Jakarta
+      run: |
+        sudo timedatectl set-timezone Asia/Jakarta
+        date # Untuk verifikasi bahwa timezone sudah berubah
+
+    - name: Run script
+      env:
+        # Variabel lingkungan untuk token bot dan channel ID
+        # Sebaiknya simpan ini sebagai GitHub Secrets
+        BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+        CHANNEL_ID: ${{ secrets.CHANNEL_ID }}
+      run: |
+        python sch.py
