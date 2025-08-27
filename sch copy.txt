@@ -4,30 +4,16 @@ import json
 from collections import defaultdict
 import datetime
 import os
-import sys # Import sys untuk keluar dengan pesan error
 
 # Konfigurasi
 json_url = 'https://weekendsch.pages.dev/sch/schedule.json'
 local_json_path = 'schedule.json'  # Path ke file JSON lokal (opsional)
-
-# Ambil dari variabel lingkungan (direkomendasikan untuk GitHub Actions)
-# Jika tidak ditemukan, script akan keluar dengan pesan error.
-bot_token = os.environ.get('BOT_TOKEN')
-channel_id = os.environ.get('CHANNEL_ID')
-
-# Periksa apakah variabel lingkungan ada
-if not bot_token:
-    print("Error: Variabel lingkungan 'BOT_TOKEN' tidak ditemukan. Pastikan telah diatur di GitHub Secrets.", file=sys.stderr)
-    sys.exit(1) # Keluar dengan kode error
-if not channel_id:
-    print("Error: Variabel lingkungan 'CHANNEL_ID' tidak ditemukan. Pastikan telah diatur di GitHub Secrets.", file=sys.stderr)
-    sys.exit(1) # Keluar dengan kode error
-
+bot_token = '7741363972:AAF3pOoQLQHaeJsRExptm5AqBps-56GxXPI'
+channel_id = '-1002278948365'
 allowed_leagues = ['Premier League', 'LaLiga', 'Serie A', 'Champions League', 'ENGLAND: EFL Cup', 'Bundesliga', 'Europa League'
 ]  # Filter liga
 
 # Ambil tanggal hari ini (UTC+7)
-# Menggunakan timezone Asia/Jakarta yang sudah diset di GitHub Actions runner
 today = datetime.datetime.now().strftime('%Y-%m-%d')
 
 # Fetch data JSON
@@ -38,22 +24,18 @@ try:
     with urllib.request.urlopen(req) as response:
         data = json.loads(response.read().decode('utf-8'))
 except urllib.error.HTTPError as e:
-    print(f"Error fetching JSON: {e}", file=sys.stderr)
+    print(f"Error fetching JSON: {e}")
     # Fallback ke file lokal jika ada
     if os.path.exists(local_json_path):
-        print("Mencoba membaca dari file JSON lokal...", file=sys.stderr)
-        try:
-            with open(local_json_path, 'r') as f:
-                data = json.load(f)
-        except Exception as file_e:
-            print(f"Error membaca dari file JSON lokal: {file_e}", file=sys.stderr)
-            sys.exit(1)
+        print("Mencoba membaca dari file JSON lokal...")
+        with open(local_json_path, 'r') as f:
+            data = json.load(f)
     else:
-        print("File JSON lokal tidak ditemukan. Keluar.", file=sys.stderr)
-        sys.exit(1)
+        print("File JSON lokal tidak ditemukan. Keluar.")
+        exit(1)
 except Exception as e:
-    print(f"Error lain saat fetch JSON: {e}", file=sys.stderr)
-    sys.exit(1)
+    print(f"Error lain saat fetch JSON: {e}")
+    exit(1)
 
 # Kelompokkan data untuk hari ini per liga
 groups = defaultdict(list)
@@ -74,7 +56,7 @@ for match in data:
 # Jika tidak ada pertandingan hari ini, keluar
 if not groups:
     print("Tidak ada pertandingan untuk hari ini di liga yang dipilih.")
-    sys.exit(0) # Keluar dengan kode sukses
+    exit(0)
 
 # Bangun pesan dengan header, nama liga, dan footer dalam bold
 date_obj = datetime.datetime.strptime(today, '%Y-%m-%d')
@@ -104,8 +86,6 @@ try:
         if result['ok']:
             print(f"Pesan berhasil dikirim untuk tanggal {today}")
         else:
-            print(f"Gagal mengirim: {result['description']}", file=sys.stderr)
-            sys.exit(1)
+            print(f"Gagal mengirim: {result['description']}")
 except Exception as e:
-    print(f"Error mengirim pesan: {e}", file=sys.stderr)
-    sys.exit(1)
+    print(f"Error mengirim pesan: {e}")
