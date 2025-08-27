@@ -9,7 +9,7 @@ import os
 json_url = 'https://weekendsch.pages.dev/sch/schedule.json'
 local_json_path = 'schedule.json'  # Path ke file JSON lokal (opsional)
 bot_token = '7741363972:AAF3pOoQLQHaeJsRExptm5AqBps-56GxXPI'
-channel_id = '-1001885071311'
+channel_id = '-1002278948365'
 allowed_leagues = ['Premier League', 'LaLiga', 'Serie A', 'Champions League', 'ENGLAND: EFL Cup', 'Bundesliga', 'Europa League'
 ]  # Filter liga
 
