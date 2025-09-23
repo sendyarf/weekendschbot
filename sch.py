@@ -23,7 +23,7 @@ if not channel_id:
     print("Error: Variabel lingkungan 'CHANNEL_ID' tidak ditemukan. Pastikan telah diatur di GitHub Secrets.", file=sys.stderr)
     sys.exit(1) # Keluar dengan kode error
 
-allowed_leagues = ['Premier League', 'LaLiga', 'Serie A', 'Champions League', 'ENGLAND: EFL Cup', 'Bundesliga', 'Europa League'
+allowed_leagues = ['Premier League', 'LaLiga', 'Serie A', 'Champions League', 'england - EFL Cup', 'Bundesliga', 'Europa League'
 ]  # Filter liga
 
 # Ambil tanggal hari ini (UTC+7)
