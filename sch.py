@@ -96,7 +96,7 @@ for match in data:
     team1 = match['team1']['name']
     team2 = match['team2']['name']
     match_id = match['id']
-    url_match = f"https://gvt720.blogspot.com/?match={match_id}"
+    url_match = f"https://gvt-081025.pages.dev/{match_id}"
     line = f"🕒 {time} | <a href='{url_match}'>{team1} vs {team2}</a>"
     groups[league].append((time, line))
 
