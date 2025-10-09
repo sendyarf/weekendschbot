@@ -23,7 +23,7 @@ if not channel_id:
     print("Error: Variabel lingkungan 'CHANNEL_ID' tidak ditemukan.", file=sys.stderr)
     sys.exit(1)
 
-allowed_leagues = ['Premier League', 'LaLiga', 'Serie A', 'Champions League', 'England - EFL Cup', 'Bundesliga', 'Europa League', 'Coppa Italia']
+allowed_leagues = ['England - Premier League', 'Spain - La Liga', 'Italy - Serie A', 'France - Ligue 1', 'UEFA Champions League', 'England - EFL Cup', 'Germany - Bundesliga', 'Europa League', 'Coppa Italia']
 
 # Ambil tanggal hari ini (UTC+7)
 today = datetime.datetime.now().strftime('%Y-%m-%d')
