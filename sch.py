@@ -7,7 +7,7 @@ import os
 import sys
 
 # Konfigurasi
-json_url = 'https://weekendsch.pages.dev/sch/schedule.json'
+json_url = 'https://gvtsch.pages.dev/sch.json'
 local_json_path = 'schedule.json'  # Path ke file JSON lokal (opsional)
 history_file = 'send_history.json'  # File untuk menyimpan riwayat pengiriman
 
@@ -23,7 +23,7 @@ if not channel_id:
     print("Error: Variabel lingkungan 'CHANNEL_ID' tidak ditemukan.", file=sys.stderr)
     sys.exit(1)
 
-allowed_leagues = ['England - Premier League', 'Spain - La Liga', 'Italy - Serie A', 'France - Ligue 1', 'UEFA Champions League', 'England - EFL Cup', 'Germany - Bundesliga', 'Europa League', 'Coppa Italia']
+allowed_leagues = ['England - Premier League', 'Spain - La Liga', 'Italy - Serie A', 'France - Ligue 1', 'UEFA Champions League', 'Germany - Bundesliga']
 
 # Ambil tanggal hari ini (UTC+7)
 today = datetime.datetime.now().strftime('%Y-%m-%d')
