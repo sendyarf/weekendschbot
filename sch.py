@@ -116,7 +116,7 @@ for league in sorted(groups):
     sorted_matches = sorted(groups[league])
     for _, line in sorted_matches:
         msg += line + "\n"
-msg += "\n<b>govoettv.blogspot.com</b>"
+msg += "\n<b> </b>"
 
 # Kirim ke Telegram channel
 telegram_api_url = f"https://api.telegram.org/bot{bot_token}/sendMessage"
