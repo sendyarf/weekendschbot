@@ -7,7 +7,7 @@ import os
 import sys
 
 # Konfigurasi
-json_url = 'https://gvtsch.pages.dev/sch.json'
+json_url = 'https://v2-gvtsch.pages.dev/sch.json'
 local_json_path = 'schedule.json'  # Path ke file JSON lokal (opsional)
 history_file = 'send_history.json'  # File untuk menyimpan riwayat pengiriman
 
