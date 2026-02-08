@@ -24,6 +24,7 @@ if not channel_id:
     sys.exit(1)
 
 allowed_leagues = ['England - Premier League', 'Spain - LaLiga', 'Italy - Serie A', 'France - Ligue 1', 'UEFA Champions League', 'Germany - Bundesliga', 'Netherlands - Eredivisie']
+ # Filter liga
 
 # Ambil tanggal hari ini (UTC+7)
 today = datetime.datetime.now().strftime('%Y-%m-%d')
@@ -95,8 +96,9 @@ for match in data:
     time = match['kickoff_time']
     team1 = match['team1']['name']
     team2 = match['team2']['name']
-    match_id = match['id']
-    url_match = f"https://gvt-070226.pages.dev/{match_id}"
+    slug1 = team1.lower().replace(' ', '-')
+    slug2 = team2.lower().replace(' ', '-')
+    url_match = f"https://gvt-070226.pages.dev/{slug1}-vs-{slug2}"
     line = f"🕒 {time} | <a href='{url_match}'>{team1} vs {team2}</a>"
     groups[league].append((time, line))
 
@@ -116,6 +118,7 @@ for league in sorted(groups):
     sorted_matches = sorted(groups[league])
     for _, line in sorted_matches:
         msg += line + "\n"
+# Tambahkan footer
 msg += "\n<b> </b>"
 
 # Kirim ke Telegram channel
