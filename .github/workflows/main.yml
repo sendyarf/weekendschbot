@@ -2,40 +2,51 @@ name: Match Schedule Bot
 
 on:
   schedule:
-    # Jadwal untuk menjalankan setiap hari pukul 00:00 di zona waktu Jakarta/Bandung (UTC+7)
-    # Cron string: MINUTE HOUR DAY_OF_MONTH MONTH DAY_OF_WEEK
-    # 0 17 * * * adalah 17:00 UTC, yang sama dengan 00:00 UTC+7 (Jakarta/Bandung)
-    - cron: '0 17 * * *'
+    # Run every hour at minute 0
+    # Bot logic determines what to send based on current time (UTC+7)
+    # - 00:00 UTC+7 (17:00 UTC): sends overview
+    # - Every other hour: checks for upcoming matches and sends reminders
+    - cron: '0 * * * *'
   workflow_dispatch:
-    # Mengizinkan menjalankan workflow secara manual dari GitHub UI
+    # Allow manual trigger from GitHub UI
+
+# Prevent concurrent runs to avoid history conflicts
+concurrency:
+  group: match-schedule-bot
+  cancel-in-progress: false
 
 jobs:
   run-bot:
     runs-on: ubuntu-latest
-    
+
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
 
     - name: Set up Python
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v5
       with:
-        python-version: '3.11' # Sesuaikan dengan versi Python yang kamu gunakan
-
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
+        python-version: '3.11'
 
     - name: Set timezone to Asia/Jakarta
       run: |
         sudo timedatectl set-timezone Asia/Jakarta
-        date # Untuk verifikasi bahwa timezone sudah berubah
+        echo "Current time: $(date)"
 
-    - name: Run script
+    - name: Pull latest history
+      run: |
+        git pull --rebase origin main || true
+
+    - name: Run bot
       env:
-        # Variabel lingkungan untuk token bot dan channel ID
-        # Sebaiknya simpan ini sebagai GitHub Secrets
         BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
         CHANNEL_ID: ${{ secrets.CHANNEL_ID }}
       run: |
         python sch.py
+
+    - name: Save history to repo
+      run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
+        git add send_history.json
+        git diff --cached --quiet || (git commit -m "Update send history [skip ci]" && git push)
