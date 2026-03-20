@@ -252,9 +252,9 @@ def main():
     print(f"Found {len(today_matches)} matches for {today}")
     print(f"Found {len(tomorrow_matches)} matches for {tomorrow}")
 
-    # ── Overview (send at midnight, between 00:00 and 00:29) ──
+    # ── Overview (send during midnight hour, 00:00-00:59, history prevents duplicates) ──
     overview_key = f"overview_{today}"
-    if now.hour == 0 and now.minute < 30 and overview_key not in history:
+    if now.hour == 0 and overview_key not in history:
         overview_msg = build_overview(today_matches)
         if overview_msg and send_telegram(overview_msg):
             history[overview_key] = now.isoformat()
