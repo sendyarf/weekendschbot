@@ -2,11 +2,11 @@ name: Match Schedule Bot
 
 on:
   schedule:
-    # Run every hour at minute 0
+    # Run every 10 minutes
     # Bot logic determines what to send based on current time (UTC+7)
     # - 00:00 UTC+7 (17:00 UTC): sends overview
-    # - Every other hour: checks for upcoming matches and sends reminders
-    - cron: '0 * * * *'
+    # - Every run: checks for upcoming matches and sends reminders
+    - cron: '*/10 * * * *'
   workflow_dispatch:
     # Allow manual trigger from GitHub UI
 
@@ -33,9 +33,13 @@ jobs:
         sudo timedatectl set-timezone Asia/Jakarta
         echo "Current time: $(date)"
 
-    - name: Pull latest history
-      run: |
-        git pull --rebase origin main || true
+    - name: Restore send history cache
+      uses: actions/cache@v4
+      with:
+        path: send_history.json
+        key: send-history-${{ github.run_id }}
+        restore-keys: |
+          send-history-
 
     - name: Run bot
       env:
@@ -43,10 +47,3 @@ jobs:
         CHANNEL_ID: ${{ secrets.CHANNEL_ID }}
       run: |
         python sch.py
-
-    - name: Save history to repo
-      run: |
-        git config user.name "github-actions[bot]"
-        git config user.email "github-actions[bot]@users.noreply.github.com"
-        git add send_history.json
-        git diff --cached --quiet || (git commit -m "Update send history [skip ci]" && git push)

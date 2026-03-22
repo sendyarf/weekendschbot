@@ -53,9 +53,13 @@ def load_history():
     if os.path.exists(HISTORY_FILE):
         try:
             with open(HISTORY_FILE, 'r') as f:
-                return json.load(f)
+                history = json.load(f)
+                print(f"Loaded history with {len(history)} entries: {list(history.keys())}")
+                return history
         except Exception:
+            print("History file exists but could not be parsed, starting fresh")
             return {}
+    print("No history file found, starting fresh")
     return {}
 
 
